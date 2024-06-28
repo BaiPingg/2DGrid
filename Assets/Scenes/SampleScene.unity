@@ -949,6 +949,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Character
       objectReference: {fileID: 0}
+    - target: {fileID: 2302316170424669591, guid: 5b1d9b7ddebd73244b40f9fbfc97aa7f,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -1356,6 +1361,7 @@ MonoBehaviour:
   buildItems:
   - {fileID: 11400000, guid: b21a07a0ba0712c4a9a53df234d7e3ed, type: 2}
   - {fileID: 11400000, guid: 45bb9baff04b2a0459aa20c8fbd552e9, type: 2}
+  - {fileID: 11400000, guid: bf49ade194dad6244b5cbed76b35908a, type: 2}
   buildStates:
   - {fileID: 11400000, guid: 80f8eaecfb34d1d45a01eb0e3b438e6a, type: 2}
   - {fileID: 11400000, guid: d93367123595ee8449c61d20249d1a66, type: 2}

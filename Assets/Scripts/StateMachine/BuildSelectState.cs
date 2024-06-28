@@ -9,12 +9,45 @@ public class BuildSelectState : BuildStateBase
     {
         base.Enter(machine);
         SL.Get<InputService>().OpenInventory.performed += OpenInventory;
+        SL.Get<InputService>().MoveObj.performed += MoveObj;
+    }
+
+    public override void Tick(float delta)
+    {
+        base.Tick(delta);
+        if (Mouse.current.leftButton.wasPressedThisFrame)
+        {
+            RaycastHit hit;
+            if (SL.Get<InputService>().TryMouseRaycast(out hit))
+            {
+                var select = hit.transform.GetComponent<BuildingViewBase>();
+                if (select != null)
+                {
+                    buildService.Context.currentSelect = select;
+                    select.Select();
+                }
+            }
+            else
+            {
+                if (buildService.Context.currentSelect != null)
+                {
+                    buildService.Context.currentSelect.UnSelect();
+                    buildService.Context.currentSelect = null;
+                }
+            }
+        }
     }
 
     public override void Leave()
     {
         base.Leave();
         SL.Get<InputService>().OpenInventory.performed -= OpenInventory;
+        SL.Get<InputService>().MoveObj.performed -= MoveObj;
+    }
+
+    private void MoveObj(InputAction.CallbackContext obj)
+    {
+        buildService.SwitchState(typeof(BuildPreViewState));
     }
 
     private async void OpenInventory(InputAction.CallbackContext obj)

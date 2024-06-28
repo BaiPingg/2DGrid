@@ -5,6 +5,12 @@ using NaughtyAttributes;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
+[System.Serializable]
+public class BuildContext
+{
+    public BuildingViewBase currentSelect;
+    public BuildItem currentBuildItem;
+}
 
 public class BuildService : ServiceBase, IStateMachine
 {
@@ -14,11 +20,13 @@ public class BuildService : ServiceBase, IStateMachine
     public List<BuildStateBase> buildStates = new List<BuildStateBase>();
     [ReadOnly] private BuildStateBase _previousState;
     [ReadOnly] private BuildStateBase _currentState;
-    [ReadOnly] public BuildItem currentBuildItem;
+
+    [ReadOnly] public BuildContext Context;
 
     public override void Init()
     {
         base.Init();
+        Context = new BuildContext();
         for (int i = 0; i < buildItems.Count; i++)
         {
             buildItems[i] = buildItems[i].Copy();

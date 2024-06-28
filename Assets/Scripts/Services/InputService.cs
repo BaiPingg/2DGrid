@@ -10,7 +10,9 @@ public class InputService : ServiceBase
     public InputAction OpenInventory;
     public InputAction PlaceObj;
     public InputAction RotateObj;
+    public InputAction MoveObj;
     [SerializeField] private LayerMask placementLayerMask;
+    [SerializeField] private LayerMask buildingLayerMask;
     private Camera _camera;
 
     public override void Init()
@@ -22,6 +24,7 @@ public class InputService : ServiceBase
         OpenInventory = _PlayerControls.Player.OpenInventory;
         PlaceObj = _PlayerControls.Player.PlaceObj;
         RotateObj = _PlayerControls.Player.RotateObj;
+        MoveObj = _PlayerControls.Player.MoveObj;
     }
 
     public bool TryGetMouseWorldPos(out Vector3 pos)
@@ -34,6 +37,20 @@ public class InputService : ServiceBase
         if (Physics.Raycast(ray, out hit, 100, placementLayerMask))
         {
             pos = hit.point;
+            return true;
+        }
+
+        return false;
+    }
+
+    public bool TryMouseRaycast(out RaycastHit hit)
+    {
+        var mousePos = Mouse.current.position.ReadValue();
+
+        var ray = _camera.ScreenPointToRay(mousePos);
+
+        if (Physics.Raycast(ray, out hit, 100, buildingLayerMask))
+        {
             return true;
         }
 

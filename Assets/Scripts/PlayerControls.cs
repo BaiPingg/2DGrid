@@ -64,6 +64,15 @@ namespace UnityEngine.InputSystem
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""MoveObj"",
+                    ""type"": ""Button"",
+                    ""id"": ""9b4ca8e7-4937-43b7-80c8-ed2680832f9e"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -229,6 +238,17 @@ namespace UnityEngine.InputSystem
                     ""processors"": """",
                     ""groups"": """",
                     ""action"": ""RotateObj"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""9c94a48c-8dc8-45da-ab07-c7c73ae726f8"",
+                    ""path"": ""<Keyboard>/m"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""MoveObj"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -820,6 +840,7 @@ namespace UnityEngine.InputSystem
             m_Player_OpenInventory = m_Player.FindAction("OpenInventory", throwIfNotFound: true);
             m_Player_PlaceObj = m_Player.FindAction("PlaceObj", throwIfNotFound: true);
             m_Player_RotateObj = m_Player.FindAction("RotateObj", throwIfNotFound: true);
+            m_Player_MoveObj = m_Player.FindAction("MoveObj", throwIfNotFound: true);
             // UI
             m_UI = asset.FindActionMap("UI", throwIfNotFound: true);
             m_UI_Navigate = m_UI.FindAction("Navigate", throwIfNotFound: true);
@@ -897,6 +918,7 @@ namespace UnityEngine.InputSystem
         private readonly InputAction m_Player_OpenInventory;
         private readonly InputAction m_Player_PlaceObj;
         private readonly InputAction m_Player_RotateObj;
+        private readonly InputAction m_Player_MoveObj;
         public struct PlayerActions
         {
             private @PlayerControls m_Wrapper;
@@ -905,6 +927,7 @@ namespace UnityEngine.InputSystem
             public InputAction @OpenInventory => m_Wrapper.m_Player_OpenInventory;
             public InputAction @PlaceObj => m_Wrapper.m_Player_PlaceObj;
             public InputAction @RotateObj => m_Wrapper.m_Player_RotateObj;
+            public InputAction @MoveObj => m_Wrapper.m_Player_MoveObj;
             public InputActionMap Get() { return m_Wrapper.m_Player; }
             public void Enable() { Get().Enable(); }
             public void Disable() { Get().Disable(); }
@@ -926,6 +949,9 @@ namespace UnityEngine.InputSystem
                 @RotateObj.started += instance.OnRotateObj;
                 @RotateObj.performed += instance.OnRotateObj;
                 @RotateObj.canceled += instance.OnRotateObj;
+                @MoveObj.started += instance.OnMoveObj;
+                @MoveObj.performed += instance.OnMoveObj;
+                @MoveObj.canceled += instance.OnMoveObj;
             }
 
             private void UnregisterCallbacks(IPlayerActions instance)
@@ -942,6 +968,9 @@ namespace UnityEngine.InputSystem
                 @RotateObj.started -= instance.OnRotateObj;
                 @RotateObj.performed -= instance.OnRotateObj;
                 @RotateObj.canceled -= instance.OnRotateObj;
+                @MoveObj.started -= instance.OnMoveObj;
+                @MoveObj.performed -= instance.OnMoveObj;
+                @MoveObj.canceled -= instance.OnMoveObj;
             }
 
             public void RemoveCallbacks(IPlayerActions instance)
@@ -1128,6 +1157,7 @@ namespace UnityEngine.InputSystem
             void OnOpenInventory(InputAction.CallbackContext context);
             void OnPlaceObj(InputAction.CallbackContext context);
             void OnRotateObj(InputAction.CallbackContext context);
+            void OnMoveObj(InputAction.CallbackContext context);
         }
         public interface IUIActions
         {

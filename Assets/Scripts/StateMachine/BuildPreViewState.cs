@@ -7,49 +7,52 @@ using UnityEngine.InputSystem;
 [CreateAssetMenu(menuName = "BuildSystem/PreViewState")]
 public class BuildPreViewState : BuildStateBase
 {
-    private BuildItem _buildItem;
-    private GameObject _preView;
-    [SerializeField, Required] private Material _previewMaterial;
-    [SerializeField, Required] private Material _previewErrorMaterial;
-
     private bool _canPlace;
 
     public override void Enter(IStateMachine machine)
     {
         base.Enter(machine);
+        if (buildService.Context.currentSelect != null)
+        {
+            var _buildItem = buildService.Context.currentSelect.BuildItem;
+            var cell = SL.Get<GridService>().Grid
+                .GetCellPosition(buildService.Context.currentSelect.transform.position);
+            for (int i = _buildItem.placeX.x; i < _buildItem.placeX.y; i++)
+            {
+                for (int j = _buildItem.placeY.x; j < _buildItem.placeY.y; j++)
+                {
+                    var target = cell + new Vector2Int(i, j);
+                    SL.Get<GridService>().Grid.GetValue(target.x, target.y).Placed = false;
+                }
+            }
+        }
+        else if (buildService.Context.currentBuildItem != null)
+        {
+            buildService.Context.currentSelect = Instantiate(buildService.Context.currentBuildItem.prefab)
+                .GetComponent<BuildingViewBase>();
+            buildService.Context.currentSelect.Init(buildService.Context.currentBuildItem);
+        }
 
-        _buildItem = buildService.currentBuildItem;
-
-        _preView = Instantiate(_buildItem.prefab);
-        SetMaterial(_preView, _previewMaterial);
+        buildService.Context.currentSelect.SetPreview();
         SL.Get<InputService>().PlaceObj.performed += PlaceObj;
-        SL.Get<InputService>().RotateObj.performed += RotateObj;
+        // SL.Get<InputService>().RotateObj.performed += RotateObj;
     }
 
     private void RotateObj(InputAction.CallbackContext obj)
     {
-        if (_preView.gameObject != null)
-        {
-            var angle = _preView.gameObject.transform.eulerAngles;
-            _preView.gameObject.transform.eulerAngles = angle + new Vector3(0, 90, 0);
-        }
+        // if (_preView.gameObject != null)
+        // {
+        //     var angle = _preView.gameObject.transform.eulerAngles;
+        //     _preView.gameObject.transform.eulerAngles = angle + new Vector3(0, 90, 0);
+        // }
     }
 
-    public void SetMaterial(GameObject obj, Material mat)
-    {
-        var renderers = obj.GetComponentsInChildren<Renderer>();
-        foreach (var renderer in renderers)
-        {
-            renderer.material = mat;
-        }
-    }
 
     public override void Leave()
     {
         base.Leave();
-        Destroy(_preView);
         SL.Get<InputService>().PlaceObj.performed -= PlaceObj;
-        SL.Get<InputService>().RotateObj.performed -= RotateObj;
+        //     SL.Get<InputService>().RotateObj.performed -= RotateObj;
         _canPlace = false;
     }
 
@@ -62,9 +65,10 @@ public class BuildPreViewState : BuildStateBase
     {
         base.Tick(delta);
         var grid = SL.Get<GridService>();
+        var _buildItem = buildService.Context.currentSelect.BuildItem;
         if (SL.Get<InputService>().TryGetMouseWorldPos(out Vector3 pos))
         {
-            _preView.gameObject.SetActive(true);
+            buildService.Context.currentSelect.gameObject.SetActive(true);
             var cell = grid.Grid.GetCellPosition(pos);
             var sss = grid.Grid.GetWorldPosition(cell.x, cell.y);
             _canPlace = true;
@@ -80,14 +84,14 @@ public class BuildPreViewState : BuildStateBase
                 }
             }
 
-            _preView.gameObject.transform.position = sss;
+            buildService.Context.currentSelect.SetPosition(sss, true);
             if (_canPlace)
             {
-                SetMaterial(_preView, _previewMaterial);
+                buildService.Context.currentSelect.SetPreview();
             }
             else
             {
-                SetMaterial(_preView, _previewErrorMaterial);
+                buildService.Context.currentSelect.SetErrorView();
             }
         }
     }

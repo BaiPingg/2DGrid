@@ -20,7 +20,7 @@ public class InventoryPanel : UIPanel
             obj.GetComponent<Image>().sprite = buildItem.uiPreview;
             obj.GetComponent<Button>().onClick.AddListener((() =>
             {
-                SL.Get<BuildService>().currentBuildItem = buildItem;
+                SL.Get<BuildService>().Context.currentBuildItem = buildItem;
                 SL.Get<BuildService>().SwitchState(typeof(BuildPreViewState));
                 SL.Get<UIService>().ClosePanel();
             }));

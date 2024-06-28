@@ -215,7 +215,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 90, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: -45, z: 0}
 --- !u!114 &330585547
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1293,9 +1293,21 @@ MonoBehaviour:
     m_Interactions: 
     m_SingletonActionBindings: []
     m_Flags: 0
+  MoveObj:
+    m_Name: Move Obj
+    m_Type: 0
+    m_ExpectedControlType: 
+    m_Id: 577aabf8-2818-4388-9234-69978c6ea5ab
+    m_Processors: 
+    m_Interactions: 
+    m_SingletonActionBindings: []
+    m_Flags: 0
   placementLayerMask:
     serializedVersion: 2
     m_Bits: 64
+  buildingLayerMask:
+    serializedVersion: 2
+    m_Bits: 128
 --- !u!1 &2080552075
 GameObject:
   m_ObjectHideFlags: 0
@@ -1348,7 +1360,9 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 80f8eaecfb34d1d45a01eb0e3b438e6a, type: 2}
   - {fileID: 11400000, guid: d93367123595ee8449c61d20249d1a66, type: 2}
   - {fileID: 11400000, guid: 868397e2ca6f8064c8c6099551c97717, type: 2}
-  currentBuildItem: {fileID: 0}
+  Context:
+    currentSelect: {fileID: 0}
+    currentBuildItem: {fileID: 0}
 --- !u!1 &2110504379
 GameObject:
   m_ObjectHideFlags: 0

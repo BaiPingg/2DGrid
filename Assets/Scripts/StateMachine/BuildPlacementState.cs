@@ -14,7 +14,7 @@ public class BuildPlacementState : BuildStateBase
         {
             var cell = grid.Grid.GetCellPosition(pos);
             var sss = grid.Grid.GetWorldPosition(cell.x, cell.y);
-            buildService.Context.currentSelect.SetPosition(sss, false);
+            buildService.Context.currentSelect.SetPosition(sss, 0,false);
             buildService.Context.currentSelect.SetNormalView();
             buildService.SwitchState(typeof(BuildSelectState));
         }

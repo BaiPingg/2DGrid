@@ -14,17 +14,22 @@ public class BuildPreViewState : BuildStateBase
         base.Enter(machine);
         if (buildService.Context.currentSelect != null)
         {
-            var _buildItem = buildService.Context.currentSelect.BuildItem;
-            var cell = SL.Get<GridService>().Grid
-                .GetCellPosition(buildService.Context.currentSelect.transform.position);
-            for (int i = _buildItem.placeX.x; i < _buildItem.placeX.y; i++)
+            var list = buildService.Context.currentSelect.GetPlaceCell();
+            foreach (var cell in list)
             {
-                for (int j = _buildItem.placeY.x; j < _buildItem.placeY.y; j++)
-                {
-                    var target = cell + new Vector2Int(i, j);
-                    SL.Get<GridService>().Grid.GetValue(target.x, target.y).Placed = false;
-                }
+                SL.Get<GridService>().Grid.GetValue(cell.x, cell.y).Placed = false;
             }
+            // var _buildItem = buildService.Context.currentSelect.BuildItem;
+            //  var cell = SL.Get<GridService>().Grid
+            //      .GetCellPosition(buildService.Context.currentSelect.transform.position);
+            //  for (int i = _buildItem.placeX.x; i < _buildItem.placeX.y; i++)
+            //  {
+            //      for (int j = _buildItem.placeY.x; j < _buildItem.placeY.y; j++)
+            //      {
+            //          var target = cell + new Vector2Int(i, j);
+            //          SL.Get<GridService>().Grid.GetValue(target.x, target.y).Placed = false;
+            //      }
+            //  }
         }
         else if (buildService.Context.currentBuildItem != null)
         {
@@ -72,19 +77,28 @@ public class BuildPreViewState : BuildStateBase
             var cell = grid.Grid.GetCellPosition(pos);
             var sss = grid.Grid.GetWorldPosition(cell.x, cell.y);
             _canPlace = true;
-            for (int i = _buildItem.placeX.x; i < _buildItem.placeX.y; i++)
+            buildService.Context.currentSelect.SetPosition(sss, 0, true);
+            var list = buildService.Context.currentSelect.GetPlaceCell();
+            foreach (var posss in list)
             {
-                for (int j = _buildItem.placeY.x; j < _buildItem.placeY.y; j++)
+                if (SL.Get<GridService>().Grid.GetValue(posss.x, posss.y).Placed)
                 {
-                    var target = cell + new Vector2Int(i, j);
-                    if (grid.Grid.GetValue(target.x, target.y).Placed)
-                    {
-                        _canPlace = false;
-                    }
+                    _canPlace = false;
                 }
             }
+            // for (int i = _buildItem.placeX.x; i < _buildItem.placeX.y; i++)
+            // {
+            //     for (int j = _buildItem.placeY.x; j < _buildItem.placeY.y; j++)
+            //     {
+            //         var target = cell + new Vector2Int(i, j);
+            //         if (grid.Grid.GetValue(target.x, target.y).Placed)
+            //         {
+            //             _canPlace = false;
+            //         }
+            //     }
+            // }
 
-            buildService.Context.currentSelect.SetPosition(sss, true);
+
             if (_canPlace)
             {
                 buildService.Context.currentSelect.SetPreview();
